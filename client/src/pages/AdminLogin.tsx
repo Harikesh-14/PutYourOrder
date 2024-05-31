@@ -1,13 +1,34 @@
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 
 function AdminLogin() {
+  const [ formData, setFormData ] = useState({
+    email: "",
+    password: ""
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
+  }
+
+  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log(formData)
+  }
+
   return (
     <main className="h-screen w-full pt-20 md:py-5 bg-gray-100">
       <form
         className="w-[22rem] mx-auto p-4 bg-white rounded-md shadow flex flex-col justify-center"
+        method="POST"
+        onSubmit={handleSubmit}
       >
         <div className="flex flex-col-reverse gap-3 justify-center items-center mt-6">
-          <h1 className="text-2xl font-semibold">Welcome</h1>
+          <h1 className="text-2xl font-semibold">Welcome! Admin</h1>
           <img
             src="../../PutYourOrder.png"
             alt="The Logo"
@@ -20,12 +41,18 @@ function AdminLogin() {
             type="email"
             placeholder="Email"
             className="border-b-2 border-gray-300 py-2 px-1 outline-none"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
           />
 
           <input
             type="password"
             placeholder="Password"
             className="border-b-2 border-gray-300 py-2 px-1 outline-none"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
           />
 
           <button

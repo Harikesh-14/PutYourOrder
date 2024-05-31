@@ -32,7 +32,7 @@ function AdminRegister() {
         method="POST"
       >
         <div className="flex flex-col-reverse gap-3 justify-center items-center mt-6">
-          <h1 className="text-2xl font-semibold">Welcome</h1>
+          <h1 className="text-2xl font-semibold">Welcome! Admin</h1>
           <img
             src="../../PutYourOrder.png"
             alt="The Logo"
