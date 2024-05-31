@@ -25,10 +25,11 @@ function AdminRegister() {
   }
 
   return (
-    <main className="h-screen w-full py-5 bg-gray-100">
+    <main className="h-screen w-full pt-20 md:py-5 bg-gray-100">
       <form
         className="w-[22rem] mx-auto p-4 bg-white rounded-md shadow flex flex-col justify-center"
         onSubmit={handleSubmit}
+        method="POST"
       >
         <div className="flex flex-col-reverse gap-3 justify-center items-center mt-6">
           <h1 className="text-2xl font-semibold">Welcome</h1>
@@ -113,10 +114,10 @@ function AdminRegister() {
             </p>
 
             <Link
-              to={"#"}
+              to={"/admin/login"}
               className="text-blue-500 text-sm font-light mt-2 text-center hover:underline transition duration-300 ease-in-out"
             >
-              Sign In
+              Login
             </Link>
           </div>
 
