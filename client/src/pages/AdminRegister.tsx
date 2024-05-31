@@ -130,7 +130,7 @@ function AdminRegister() {
               Not an admin?
             </p>
             <Link
-              to={"/register"}
+              to={"/"}
               className="text-blue-500 text-sm font-light text-center hover:underline transition duration-300 ease-in-out"
             >
               Vendor

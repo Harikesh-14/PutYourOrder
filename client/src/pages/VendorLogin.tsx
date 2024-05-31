@@ -1,7 +1,7 @@
-import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-function AdminLogin() {
+function VendorLogin() {
   const [ formData, setFormData ] = useState({
     email: "",
     password: ""
@@ -28,7 +28,7 @@ function AdminLogin() {
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col-reverse gap-3 justify-center items-center mt-6">
-          <h1 className="text-2xl font-semibold">Welcome! Admin</h1>
+          <h1 className="text-2xl font-semibold">Welcome!</h1>
           <img
             src="../../PutYourOrder.png"
             alt="The Logo"
@@ -64,34 +64,19 @@ function AdminLogin() {
         </div>
 
         <div>
-          <div className="flex gap-2 justify-center">
-            <p
-              className="text-sm text-gray-600 font-light mt-2 text-center"
-            >
-              Don't have an account?
-            </p>
-
-            <Link
-              to={"/admin/register"}
-              className="text-blue-500 text-sm font-light mt-2 text-center hover:underline transition duration-300 ease-in-out"
-            >
-              Register
-            </Link>
-          </div>
-
           <div
             className="flex gap-2 justify-center"
           >
             <p
               className="text-sm text-gray-600 font-light text-center"
             >
-              Not an admin?
+              Not a vendor?
             </p>
             <Link
-              to={"/"}
+              to={"/admin/login"}
               className="text-blue-500 text-sm font-light text-center hover:underline transition duration-300 ease-in-out"
             >
-              Vendor
+              Admin
             </Link>
           </div>
         </div>
@@ -100,4 +85,4 @@ function AdminLogin() {
   )
 }
 
-export default AdminLogin
+export default VendorLogin
