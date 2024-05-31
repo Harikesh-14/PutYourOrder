@@ -25,7 +25,7 @@ function AdminRegister() {
   }
 
   return (
-    <main className="h-screen w-full py-10 bg-gray-100">
+    <main className="h-screen w-full py-5 bg-gray-100">
       <form
         className="w-[22rem] mx-auto p-4 bg-white rounded-md shadow flex flex-col justify-center"
         onSubmit={handleSubmit}
@@ -104,19 +104,37 @@ function AdminRegister() {
           </button>
         </div>
 
-        <div className="flex gap-2 justify-center">
-          <p
-            className="text-sm text-gray-600 font-light mt-2 mb-4 text-center"
-          >
-            Already have an account?
-          </p>
+        <div>
+          <div className="flex gap-2 justify-center">
+            <p
+              className="text-sm text-gray-600 font-light mt-2 text-center"
+            >
+              Already have an account?
+            </p>
 
-          <Link
-            to={"#"}
-            className="text-blue-500 text-sm font-light mt-2 mb-4 text-center hover:underline transition duration-300 ease-in-out"
+            <Link
+              to={"#"}
+              className="text-blue-500 text-sm font-light mt-2 text-center hover:underline transition duration-300 ease-in-out"
+            >
+              Sign In
+            </Link>
+          </div>
+
+          <div
+            className="flex gap-2 justify-center"
           >
-            Sign In
-          </Link>
+            <p
+              className="text-sm text-gray-600 font-light text-center"
+            >
+              Not an admin?
+            </p>
+            <Link
+              to={"/register"}
+              className="text-blue-500 text-sm font-light text-center hover:underline transition duration-300 ease-in-out"
+            >
+              Vendor
+            </Link>
+          </div>
         </div>
       </form>
     </main>
