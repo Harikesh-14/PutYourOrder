@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 
 function AdminLogin() {
-  const [ formData, setFormData ] = useState({
+  const [formData, setFormData] = useState({
     email: "",
     password: ""
   })
@@ -15,9 +15,33 @@ function AdminLogin() {
     })
   }
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(formData)
+
+    try {
+      const response = await fetch("http://localhost:3000/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+
+        if (errorData.message === "User not found") {
+          alert("User not found")
+        } else {
+          alert("Invalid credentials")
+        }
+      } else {
+        alert("Login successful")
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
