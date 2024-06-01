@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 
 function AdminRegister() {
   const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ function AdminRegister() {
     phoneNumber: "",
     password: ""
   })
+  const [redirect, setRedirect] = useState<Boolean>(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -19,9 +20,37 @@ function AdminRegister() {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(formData)
+    
+    try {
+      const response = await fetch("http://localhost:3000/admin/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if(!response.ok) {
+        const errorData = await response.json()
+
+        if(errorData.message === "User already exists") {
+          alert("User already exists")
+        } else {
+          alert("Internal server error")
+        }
+      } else {
+        alert("Admin registered successfully")
+        setRedirect(true)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if(redirect) {
+    return <Navigate to="/admin/login" />
   }
 
   return (
