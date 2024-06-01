@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
+import adminRoutes from "./Routes/admin";
+
 dotenv.config();
 const app: Application = express();
 const port = process.env.PORT || 5000;
@@ -21,6 +23,8 @@ mongoose.connect(process.env.CLUSTER_URI as string).then(() => {
 }).catch((err) => {
   console.error(err);
 });
+
+app.use('/admin', adminRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World');
