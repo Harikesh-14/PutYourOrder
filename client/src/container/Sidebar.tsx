@@ -87,7 +87,7 @@ const Sidebar = () => {
       ></div>
 
       <div
-        className='absolute w-full md:hidden'
+        className='relative w-full md:hidden'
       >
         <div
           className="absolute top-5 right-5 flex flex-col justify-center gap-1 cursor-pointer p-2 rounded-md bg-white transition duration-300 ease-in-out"

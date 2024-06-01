@@ -5,7 +5,7 @@ import Layout from './Layout'
 import AdminRegister from './pages/AdminRegister'
 import AdminLogin from './pages/AdminLogin'
 import VendorLogin from './pages/VendorLogin'
-import AdminDashboard from './pages/AdminDashboard'
+import AdminDashboard from './container/AdminDashboard'
 import AdminLayout from './AdminLayout'
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
         </Route>
         <Route path='/admin/register' element={<AdminRegister />} />
         <Route path='/admin/login' element={<AdminLogin />} />
-        
+
         <Route path='/' element={<Layout />} >
           <Route index element={<VendorLogin />} />
         </Route>
