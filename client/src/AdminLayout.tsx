@@ -1,10 +1,12 @@
 import { Outlet } from "react-router-dom"
+import Sidebar from "./container/Sidebar"
 
 function AdminLayout() {
   return (
-    <div>
+    <main className="relative bg-gray-100">
+      <Sidebar />
       <Outlet />
-    </div>
+    </main>
   )
 }
 
