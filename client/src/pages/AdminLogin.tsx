@@ -1,11 +1,13 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 
 function AdminLogin() {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   })
+
+  const [ redirect, setRedirect ] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -37,11 +39,16 @@ function AdminLogin() {
           alert("Invalid credentials")
         }
       } else {
-        alert("Login successful")
+        setRedirect(true)
+
       }
     } catch (err) {
       console.error(err)
     }
+  }
+
+  if (redirect) {
+    return <Navigate to="/admin/dashboard" />
   }
 
   return (

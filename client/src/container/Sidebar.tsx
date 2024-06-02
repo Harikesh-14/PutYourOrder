@@ -1,11 +1,62 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { BsHouseFill, BsCurrencyRupee } from 'react-icons/bs';
 import { SiManageiq } from 'react-icons/si';
 import { BiUserPlus, BiLogOut } from 'react-icons/bi';
+import { AdminContext } from '../context/adminContext';
 
 const Sidebar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [redirect, setRedirect] = useState(false)
+
+  const { adminLoggedIn, setAdminLoggedIn, isAdminLoggedIn, setIsAdminLoggedIn } = useContext(AdminContext)!
+
+  useEffect(() => {
+    fetch('http://localhost:3000/admin/profile', {
+      method: 'GET',
+      credentials: 'include',
+    }).then(response => {
+      response.json().then(data => {
+        if (response.ok) {
+          setAdminLoggedIn(data)
+          setIsAdminLoggedIn(true)
+        } else {
+          setIsAdminLoggedIn(false)
+        }
+      })
+    })
+  }, [])
+
+  const logoutUser = async () => {
+    try {
+      await fetch('http://localhost:3000/admin/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+
+      setAdminLoggedIn({
+        id: '',
+        firstName: '',
+        lastName: '',
+        gender: '',
+        email: '',
+        phoneNumber: 0,
+        message: '',
+      })
+
+      setIsAdminLoggedIn(false)
+      setRedirect(true)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if (redirect) {
+    return <Navigate to="/admin/login" />
+  }
+
+  const firstName = adminLoggedIn.firstName
+  const id = adminLoggedIn.id
 
   return (
     <div>
@@ -34,8 +85,8 @@ const Sidebar = () => {
 
         <div className="text-center mt-4">
           <h1 className="text-xl font-semibold">Admin</h1>
-          <p className="text-gray-400">Harikesh Ranjan</p>
-          <p className="text-gray-400 text-sm">@{`ndklcvnn3kl4nkl23nj`}</p>
+          <p className="text-gray-400">{firstName}</p>
+          <p className="text-gray-400 text-sm">@{id}</p>
         </div>
 
         <nav className="flex flex-col mt-6">
@@ -70,15 +121,18 @@ const Sidebar = () => {
           </ul>
         </nav>
 
-        <div className="text-center mt-6 mb-4">
-          <Link
-            to="#"
-            className="inline-flex items-center gap-2 py-2 px-4 rounded-md shadow-md text-white text-lg bg-red-500 hover:bg-red-600 transition duration-300 ease-in-out active:bg-red-700 active:shadow-none cursor-pointer"
-          >
-            Logout
-            <BiLogOut className="inline-block rotate-180" size={20} />
-          </Link>
-        </div>
+        {isAdminLoggedIn && (
+          <div className="text-center mt-6 mb-4">
+            <Link
+              to="#"
+              className="inline-flex items-center gap-2 py-2 px-4 rounded-md shadow-md text-white text-lg bg-red-500 hover:bg-red-600 transition duration-300 ease-in-out active:bg-red-700 active:shadow-none cursor-pointer"
+              onClick={logoutUser}
+            >
+              Logout
+              <BiLogOut className="inline-block rotate-180" size={20} />
+            </Link>
+          </div>
+        )}
       </div>
 
       <div
