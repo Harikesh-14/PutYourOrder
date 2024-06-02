@@ -1,4 +1,5 @@
 import { BiSolidPencil } from "react-icons/bi"
+import { CgPassword } from "react-icons/cg"
 import { CiUser } from "react-icons/ci"
 import { Link } from "react-router-dom"
 
@@ -108,7 +109,7 @@ function AdminDashboard() {
         <div className="py-4">
           <h2 className="flex items-center gap-2 text-lg md:text-xl font-semibold text-gray-800 px-3">
             Change Password
-            <CiUser />
+            <CgPassword />
           </h2>
         </div>
         <div className="flex justify-between items-center p-3 md:p-5 md:px-10">

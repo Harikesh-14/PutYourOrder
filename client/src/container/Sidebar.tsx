@@ -35,6 +35,7 @@ const Sidebar = () => {
         <div className="text-center mt-4">
           <h1 className="text-xl font-semibold">Admin</h1>
           <p className="text-gray-400">Harikesh Ranjan</p>
+          <p className="text-gray-400 text-sm">@{`ndklcvnn3kl4nkl23nj`}</p>
         </div>
 
         <nav className="flex flex-col mt-6">
