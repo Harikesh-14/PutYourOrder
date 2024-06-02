@@ -1,5 +1,3 @@
-import React from 'react';
-
 function AdminManageVendors() {
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100 min-h-screen">

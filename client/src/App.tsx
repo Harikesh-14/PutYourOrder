@@ -8,6 +8,7 @@ import VendorLogin from './pages/VendorLogin'
 import AdminDashboard from './container/AdminDashboard'
 import AdminLayout from './AdminLayout'
 import AdminManageVendors from './container/AdminManageVendors'
+import AdminAddVendor from './container/AdminAddVendor'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/admin' element={<AdminLayout />} >
           <Route path='dashboard' element={<AdminDashboard />} />
           <Route path='manage-vendors' element={<AdminManageVendors />} />
+          <Route path='add-vendor' element={<AdminAddVendor />} />
         </Route>
         <Route path='/admin/register' element={<AdminRegister />} />
         <Route path='/admin/login' element={<AdminLogin />} />
