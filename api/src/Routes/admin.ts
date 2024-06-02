@@ -74,4 +74,25 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 })
 
+router.get("/profile", (req: Request, res: Response) => {
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+
+  jwt.verify(token, secret, {}, (err, info) => {
+    if (err) {
+      console.error('JWT verification error:', err);
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    res.json(info)
+  })
+})
+
+router.post("/logout", async (req: Request, res: Response) => {
+  res.clearCookie("token").json({ message: "Logged out" });
+});
+
 export default router;
