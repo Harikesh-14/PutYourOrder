@@ -1,9 +1,10 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { BiSolidPencil } from "react-icons/bi"
 import { CgPassword } from "react-icons/cg"
 import { CiUser } from "react-icons/ci"
 import { Link } from "react-router-dom"
 import { AdminContext } from "../context/adminContext"
+import { MdDone } from "react-icons/md"
 
 function AdminDashboard() {
   const { adminLoggedIn } = useContext(AdminContext)!
@@ -16,9 +17,44 @@ function AdminDashboard() {
     phoneNumber: adminLoggedIn.phoneNumber,
   }
 
-  const updateFistName = async () => {
+  const [firstName, setFirstName] = useState(adminLoggedIn.firstName);
+  const [lastName, setLastName] = useState(adminLoggedIn.lastName);
+  const [gender, setGender] = useState(adminLoggedIn.gender);
+  const [email, setEmail] = useState(adminLoggedIn.email);
+  const [phoneNumber, setPhoneNumber] = useState(adminLoggedIn.phoneNumber);
 
-  }
+  const [editFirstName, setEditFirstName] = useState(false);
+  const [editLastName, setEditLastName] = useState(false);
+  const [editGender, setEditGender] = useState(false);
+  const [editEmail, setEditEmail] = useState(false);
+  const [editPhoneNumber, setEditPhoneNumber] = useState(false);
+
+  useEffect(() => {
+    setFirstName(adminLoggedIn.firstName);
+    setLastName(adminLoggedIn.lastName);
+    setGender(adminLoggedIn.gender);
+    setEmail(adminLoggedIn.email);
+    setPhoneNumber(adminLoggedIn.phoneNumber);
+  }, [adminLoggedIn]);
+
+  const handleFirstNameUpdateClick = async () => {
+    try {
+      await fetch('http://localhost:3000/admin/update-firstName', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: firstName,
+        }),
+      })
+    } catch (err) {
+      console.error(err)
+    }
+    setEditFirstName(false);
+    alert('First name updated successfully\nPlease logout and login again to see changes');
+  };
 
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100">
@@ -37,15 +73,27 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={userDetails.firstName}
-            disabled
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+            disabled={!editFirstName}
           />
-          <Link
-            to={'#'}
-            className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
-          >
-            <BiSolidPencil />
-          </Link>
+          {editFirstName ? (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={handleFirstNameUpdateClick}
+            >
+              <MdDone />
+            </Link>
+          ) : (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={() => setEditFirstName(true)}
+            >
+              <BiSolidPencil />
+            </Link>
+          )}
         </div>
 
         <div className="flex justify-between items-center p-3 md:p-5 md:px-10">
@@ -56,6 +104,7 @@ function AdminDashboard() {
             type="text"
             className="w-full border border-gray-300 rounded p-2"
             value={userDetails.lastName}
+            onChange={e => setLastName(e.target.value)}
             disabled
           />
           <Link
@@ -74,6 +123,7 @@ function AdminDashboard() {
             type="text"
             className="w-full border border-gray-300 rounded p-2"
             value={userDetails.gender}
+            onChange={e => setGender(e.target.value)}
             disabled
           />
           <Link
@@ -92,6 +142,7 @@ function AdminDashboard() {
             type="text"
             className="w-full border border-gray-300 rounded p-2"
             value={userDetails.email}
+            onChange={e => setEmail(e.target.value)}
             disabled
           />
           <Link
@@ -110,6 +161,7 @@ function AdminDashboard() {
             type="text"
             className="w-full border border-gray-300 rounded p-2"
             value={userDetails.phoneNumber}
+            onChange={e => setPhoneNumber(parseInt(e.target.value))}
             disabled
           />
           <Link
