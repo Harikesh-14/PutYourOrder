@@ -12,15 +12,6 @@ const secret = process.env.SECRET_KEY as string;
 
 router.use(cookieParser());
 
-interface AdminJwtPayload extends JwtPayload {
-  id: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  email: string;
-  phoneNumber: string;
-}
-
 router.post("/register", async (req: Request, res: Response) => {
   const { firstName, lastName, gender, email, phoneNumber, password } = req.body;
 
@@ -104,9 +95,9 @@ router.post("/logout", async (req: Request, res: Response) => {
   res.clearCookie("token").json({ message: "Logged out" });
 });
 
-router.put("/update", async (req: Request, res: Response) => {
+router.put("/update-firstName", async (req: Request, res: Response) => {
+  const { firstName } = req.body;
   const { token } = req.cookies;
-  const { firstName, lastName, gender, email, phoneNumber } = req.body;
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -118,27 +109,18 @@ router.put("/update", async (req: Request, res: Response) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    if (typeof decoded !== 'string') {
-      const updateFields: any = {};
-      if (firstName) updateFields.firstName = firstName;
-      if (lastName) updateFields.lastName = lastName;
-      if (gender) updateFields.gender = gender;
-      if (email) updateFields.email = email;
-      if (phoneNumber) updateFields.phoneNumber = phoneNumber;
+    try {
+      const info = decoded as JwtPayload;
+      const updatedAdmin = await adminModel.findByIdAndUpdate(info.id, { firstName }, { new: true });
 
-      try {
-        const updatedAdmin = await adminModel.findByIdAndUpdate(
-          (decoded as AdminJwtPayload).id,
-          updateFields,
-          { new: true }
-        );
-
-        res.json(updatedAdmin);
-      } catch (err) {
-        res.status(500).json({ message: "Internal server error" });
+      if (!updatedAdmin) {
+        return res.status(404).json({ error: 'Admin not found' });
       }
-    } else {
-      res.status(401).json({ error: 'Unauthorized' });
+
+      return res.status(200).json({ message: 'First name updated successfully', updatedAdmin });
+    } catch (updateError) {
+      console.error('Database update error:', updateError);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   });
 });
