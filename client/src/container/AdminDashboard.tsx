@@ -1,9 +1,21 @@
+import { useContext } from "react"
 import { BiSolidPencil } from "react-icons/bi"
 import { CgPassword } from "react-icons/cg"
 import { CiUser } from "react-icons/ci"
 import { Link } from "react-router-dom"
+import { AdminContext } from "../context/adminContext"
 
 function AdminDashboard() {
+  const { adminLoggedIn } = useContext(AdminContext)!
+
+  const userDetails = {
+    firstName: adminLoggedIn.firstName,
+    lastName: adminLoggedIn.lastName,
+    gender: adminLoggedIn.gender,
+    email: adminLoggedIn.email,
+    phoneNumber: adminLoggedIn.phoneNumber,
+  }
+
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100">
       <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">Admin Dashboard</h1>
@@ -21,7 +33,7 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={"Harikesh Ranjan"}
+            value={userDetails.firstName}
             disabled
           />
           <Link
@@ -39,7 +51,7 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={"Sinha"}
+            value={userDetails.lastName}
             disabled
           />
           <Link
@@ -57,7 +69,7 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={"Male"}
+            value={userDetails.gender}
             disabled
           />
           <Link
@@ -75,7 +87,7 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={"ranjansinhaharikesh@gmail.com"}
+            value={userDetails.email}
             disabled
           />
           <Link
@@ -93,7 +105,7 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={"9319958749"}
+            value={userDetails.phoneNumber}
             disabled
           />
           <Link
