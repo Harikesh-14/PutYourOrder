@@ -9,13 +9,13 @@ import { MdDone } from "react-icons/md"
 function AdminDashboard() {
   const { adminLoggedIn } = useContext(AdminContext)!
 
-  const userDetails = {
-    firstName: adminLoggedIn.firstName,
-    lastName: adminLoggedIn.lastName,
-    gender: adminLoggedIn.gender,
-    email: adminLoggedIn.email,
-    phoneNumber: adminLoggedIn.phoneNumber,
-  }
+  // const userDetails = {
+  //   firstName: adminLoggedIn.firstName,
+  //   lastName: adminLoggedIn.lastName,
+  //   gender: adminLoggedIn.gender,
+  //   email: adminLoggedIn.email,
+  //   phoneNumber: adminLoggedIn.phoneNumber,
+  // }
 
   const [firstName, setFirstName] = useState(adminLoggedIn.firstName);
   const [lastName, setLastName] = useState(adminLoggedIn.lastName);
@@ -54,6 +54,82 @@ function AdminDashboard() {
     }
     setEditFirstName(false);
     alert('First name updated successfully\nPlease logout and login again to see changes');
+  };
+
+  const handleLastNameUpdateClick = async () => {
+    try {
+      await fetch('http://localhost:3000/admin/update-lastName', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          lastName: lastName,
+        }),
+      })
+    } catch (err) {
+      console.error(err)
+    }
+    setEditLastName(false);
+    alert('Last name updated successfully\nPlease logout and login again to see changes');
+  };
+
+  const handleGenderUpdateClick = async () => {
+    try {
+      await fetch('http://localhost:3000/admin/update-gender', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gender: gender.toLowerCase(),
+        }),
+      })
+    } catch (err) {
+      console.error(err)
+    }
+    setEditGender(false);
+    alert('Last name updated successfully\nPlease logout and login again to see changes');
+  };
+
+  const handleEmailUpdateClick = async () => {
+    try {
+      await fetch('http://localhost:3000/admin/update-email', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      })
+    } catch (err) {
+      console.error(err)
+    }
+    setEditEmail(false);
+    alert('Email updated successfully\nPlease logout and login again to see changes');
+  };
+
+  const handlePhoneNumberUpdateClick = async () => {
+    try {
+      await fetch('http://localhost:3000/admin/update-phoneNumber', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: phoneNumber,
+        }),
+      })
+    } catch (err) {
+      console.error(err)
+    }
+    setEditPhoneNumber(false);
+    alert('Phone number updated successfully\nPlease logout and login again to see changes');
   };
 
   return (
@@ -103,16 +179,27 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={userDetails.lastName}
+            value={lastName}
             onChange={e => setLastName(e.target.value)}
-            disabled
+            disabled = {!editLastName}
           />
-          <Link
-            to={'#'}
-            className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
-          >
-            <BiSolidPencil />
-          </Link>
+          {editLastName ? (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={handleLastNameUpdateClick}
+            >
+              <MdDone />
+            </Link>
+          ) : (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={() => setEditLastName(true)}
+            >
+              <BiSolidPencil />
+            </Link>
+          )}
         </div>
 
         <div className="flex justify-between items-center p-3 md:p-5 md:px-10">
@@ -122,16 +209,27 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={userDetails.gender}
+            value={gender}
             onChange={e => setGender(e.target.value)}
-            disabled
+            disabled = {!editGender}
           />
-          <Link
-            to={'#'}
-            className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
-          >
-            <BiSolidPencil />
-          </Link>
+          {editGender ? (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={handleGenderUpdateClick}
+            >
+              <MdDone />
+            </Link>
+          ) : (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={() => setEditGender(true)}
+            >
+              <BiSolidPencil />
+            </Link>
+          )}
         </div>
 
         <div className="flex justify-between items-center p-3 md:p-5 md:px-10">
@@ -141,16 +239,27 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={userDetails.email}
+            value={email}
             onChange={e => setEmail(e.target.value)}
-            disabled
+            disabled = {!editEmail}
           />
-          <Link
-            to={'#'}
-            className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
-          >
-            <BiSolidPencil />
-          </Link>
+          {editEmail ? (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={handleEmailUpdateClick}
+            >
+              <MdDone />
+            </Link>
+          ) : (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={() => setEditEmail(true)}
+            >
+              <BiSolidPencil />
+            </Link>
+          )}
         </div>
 
         <div className="flex justify-between items-center p-3 md:p-5 md:px-10">
@@ -160,16 +269,27 @@ function AdminDashboard() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
-            value={userDetails.phoneNumber}
+            value={phoneNumber}
             onChange={e => setPhoneNumber(parseInt(e.target.value))}
-            disabled
+            disabled = {!editPhoneNumber}
           />
-          <Link
-            to={'#'}
-            className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
-          >
-            <BiSolidPencil />
-          </Link>
+          {editPhoneNumber ? (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={handlePhoneNumberUpdateClick}
+            >
+              <MdDone />
+            </Link>
+          ) : (
+            <Link
+              to={'#'}
+              className="bg-blue-500 text-white font-semibold text-sm md:text-lg ml-2 p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
+              onClick={() => setEditPhoneNumber(true)}
+            >
+              <BiSolidPencil />
+            </Link>
+          )}
         </div>
       </div>
 
