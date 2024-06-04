@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 
 function AdminManageVendors() {
   const [vendors, setVendors] = useState([])
+  const [redirect, setRedirect] = useState(false)
 
   useEffect(() => {
     try {
@@ -24,6 +26,27 @@ function AdminManageVendors() {
     }
   }, [vendors])
 
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/admin/checkAdminLoginAuth', {
+          method: 'GET',
+          credentials: 'include',
+        })
+
+        const data = await response.json()
+
+        if (!data.authenticated) {
+          setRedirect(true)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    checkAuthStatus()
+  }, [])
+
   const deleteVendor = async (id: string) => {
     try {
       await fetch(`http://localhost:3000/admin/delete-vendor/${id}`, {
@@ -43,6 +66,10 @@ function AdminManageVendors() {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  if (redirect) {
+    return <Navigate to="/admin/login" />
   }
 
   return (

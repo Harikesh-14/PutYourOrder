@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { Navigate } from "react-router-dom"
 
 function AdminAddVendor() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,29 @@ function AdminAddVendor() {
     phoneNumber: "",
     password: "",
   })
+
+  const [redirect, setRedirect] = useState(false)
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/admin/checkAdminLoginAuth', {
+          method: 'GET',
+          credentials: 'include',
+        })
+
+        const data = await response.json()
+
+        if (!data.authenticated) {
+          setRedirect(true)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    checkAuthStatus()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -52,6 +76,10 @@ function AdminAddVendor() {
     } catch (error) {
       console.error("Add vendor error:", error)
     }
+  }
+
+  if (redirect) {
+    return <Navigate to="/admin/login" />
   }
 
   return (
