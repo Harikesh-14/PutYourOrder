@@ -3,7 +3,9 @@ import bcrypt from "bcryptjs"
 import jwt, { JwtPayload } from "jsonwebtoken"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+
 import adminModel from "../../models/admin";
+import vendorModel from "../../models/vendor";
 
 dotenv.config();
 const router = Router();
@@ -244,5 +246,35 @@ router.put("/update-phoneNumber", async (req: Request, res: Response) => {
     }
   });
 });
+
+router.post("/add-vendor", async (req: Request, res: Response) => {
+  const { firstName, lastName, gender, email, phoneNumber, password } = req.body;
+
+  try{
+    const existingVendor = await vendorModel.findOne({ email })
+
+    if (existingVendor) {
+      return res.status(400).json({ message: "Vendor already exists" });
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, salt); 
+
+    const newVendor = await vendorModel.create({
+      firstName,
+      lastName,
+      gender,
+      email,
+      phoneNumber,
+      password: hashedPassword,
+    })
+
+    res.status(201).json({
+      message: "Vendor registered successfully",
+      data: newVendor,
+    })
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
 
 export default router;
