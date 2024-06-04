@@ -24,6 +24,8 @@ function AdminManageVendors() {
     }
   }, [])
 
+  const deleteVendor = async () => {}
+
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100 min-h-screen">
       <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-8">Manage Vendors</h1>
@@ -47,7 +49,12 @@ function AdminManageVendors() {
                 <td className="p-3 text-sm text-gray-700">{vendor.email}</td>
                 <td className="p-3 text-sm text-gray-700">{vendor.phoneNumber}</td>
                 <td className="flex p-3 text-sm text-gray-700 space-x-2">
-                  <button className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">Delete</button>
+                  <button
+                    className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out"
+                    onClick={deleteVendor}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

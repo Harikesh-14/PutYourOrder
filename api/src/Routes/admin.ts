@@ -286,4 +286,20 @@ router.get("/view-vendors", async (req: Request, res: Response) => {
   }
 })
 
+router.delete("/delete-vendor/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const deletedVendor = await vendorModel.findByIdAndDelete(id);
+
+    if (!deletedVendor) {
+      return res.status(404).json({ message: "Vendor not found" });
+    }
+
+    res.status(200).json({ message: "Vendor deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
+
 export default router;
