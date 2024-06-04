@@ -1,4 +1,29 @@
+import { useEffect, useState } from "react";
+
 function AdminManageVendors() {
+  const [vendors, setVendors] = useState([])
+
+  useEffect(() => {
+    try {
+      fetch("http://localhost:3000/admin/view-vendors", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then(response => {
+        response.json().then(data => {
+          if (response.ok) {
+            setVendors(data)
+          } else {
+            console.error("Error fetching vendors")
+          }
+        })
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }, [])
+
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100 min-h-screen">
       <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-8">Manage Vendors</h1>
@@ -15,46 +40,18 @@ function AdminManageVendors() {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-gray-200 hover:bg-gray-100 transition duration-200">
-              <td className="p-3 text-sm text-gray-700">Harikesh Ranjan Sinha</td>
-              <td className="p-3 text-sm text-gray-700">Male</td>
-              <td className="p-3 text-sm text-gray-700">ranjansinhaharikesh@gmail.com</td>
-              <td className="p-3 text-sm text-gray-700">1234567890</td>
-              <td className="flex p-3 text-sm text-gray-700 space-x-2">
-                <button className="bg-blue-500 text-white font-semibold text-sm p-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out">Edit</button>
-                <button className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">Delete</button>
-              </td>
-            </tr>
-            <tr className="border-b border-gray-200 hover:bg-gray-100 transition duration-200">
-              <td className="p-3 text-sm text-gray-700">Manikesh Ranjan Sinha</td>
-              <td className="p-3 text-sm text-gray-700">Male</td>
-              <td className="p-3 text-sm text-gray-700">JCBIDSJCKSDK</td>
-              <td className="p-3 text-sm text-gray-700">1234567890</td>
-              <td className="p-3 text-sm text-gray-700 space-x-2">
-                <button className="bg-blue-500 text-white font-semibold text-sm p-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out">Edit</button>
-                <button className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">Delete</button>
-              </td>
-            </tr>
-            <tr className="border-b border-gray-200 hover:bg-gray-100 transition duration-200">
-              <td className="p-3 text-sm text-gray-700">Nishikesh Ranjan Sinha</td>
-              <td className="p-3 text-sm text-gray-700">Male</td>
-              <td className="p-3 text-sm text-gray-700">JCBIDSJCKSDK</td>
-              <td className="p-3 text-sm text-gray-700">1234567890</td>
-              <td className="p-3 text-sm text-gray-700 space-x-2">
-                <button className="bg-blue-500 text-white font-semibold text-sm p-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out">Edit</button>
-                <button className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">Delete</button>
-              </td>
-            </tr>
-            <tr className="border-b border-gray-200 hover:bg-gray-100 transition duration-200">
-              <td className="p-3 text-sm text-gray-700">Sneha Sinha</td>
-              <td className="p-3 text-sm text-gray-700">Male</td>
-              <td className="p-3 text-sm text-gray-700">JCBIDSJCKSDK</td>
-              <td className="p-3 text-sm text-gray-700">1234567890</td>
-              <td className="p-3 text-sm text-gray-700 space-x-2">
-                <button className="bg-blue-500 text-white font-semibold text-sm p-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out">Edit</button>
-                <button className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">Delete</button>
-              </td>
-            </tr>
+            {vendors.map((vendor: any) => (
+              <tr key={vendor._id} className="border-b border-gray-200 hover:bg-gray-100 transition duration-200">
+                <td className="p-3 text-sm text-gray-700">{vendor.firstName} {vendor.lastName}</td>
+                <td className="p-3 text-sm text-gray-700">{vendor.gender}</td>
+                <td className="p-3 text-sm text-gray-700">{vendor.email}</td>
+                <td className="p-3 text-sm text-gray-700">{vendor.phoneNumber}</td>
+                <td className="flex p-3 text-sm text-gray-700 space-x-2">
+                  <button className="bg-blue-500 text-white font-semibold text-sm p-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out">Edit</button>
+                  <button className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">Delete</button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
