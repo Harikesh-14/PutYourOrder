@@ -277,4 +277,13 @@ router.post("/add-vendor", async (req: Request, res: Response) => {
   }
 })
 
+router.get("/view-vendors", async (req: Request, res: Response) => {
+  try {
+    const vendors = await vendorModel.find()
+    res.status(200).json(vendors)
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
+
 export default router;
