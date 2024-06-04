@@ -263,7 +263,7 @@ router.put("/update-phoneNumber", async (req: Request, res: Response) => {
 });
 
 router.put("/update-password", async (req: Request, res: Response) => {
-  const { password } = req.body;
+  const { oldPassword, newPassword } = req.body;
   const { token } = req.cookies;
 
   if (!token) {
@@ -277,21 +277,32 @@ router.put("/update-password", async (req: Request, res: Response) => {
     }
 
     try {
-      const hashedPassword = bcrypt.hashSync(password, salt);
       const info = decoded as JwtPayload;
-      const updatedAdmin = await adminModel.findByIdAndUpdate(info.id, { password: hashedPassword }, { new: true });
+      const admin = await adminModel.findById(info.id);
 
-      if (!updatedAdmin) {
+      if (!admin) {
         return res.status(404).json({ error: 'Admin not found' });
       }
 
-      return res.status(200).json({ message: 'Password updated successfully', updatedAdmin });
+      // Verify the old password before updating
+      const isOldPasswordValid = bcrypt.compareSync(oldPassword, admin.password);
+      if (!isOldPasswordValid) {
+        return res.status(400).json({ error: 'Invalid old password' });
+      }
+
+      const hashedPassword = bcrypt.hashSync(newPassword, salt);
+      admin.password = hashedPassword;
+
+      await admin.save(); // Use save to update the document
+
+      return res.status(200).json({ message: 'Password updated successfully' });
     } catch (updateError) {
       console.error('Database update error:', updateError);
       return res.status(500).json({ error: 'Internal server error' });
     }
   });
-})
+});
+
 
 router.post("/add-vendor", async (req: Request, res: Response) => {
   const { firstName, lastName, gender, email, phoneNumber, password } = req.body;

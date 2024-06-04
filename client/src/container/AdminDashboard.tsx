@@ -23,6 +23,10 @@ function AdminDashboard() {
 
   const [redirect, setRedirect] = useState(false)
 
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   useEffect(() => {
     setFirstName(adminLoggedIn.firstName);
     setLastName(adminLoggedIn.lastName);
@@ -147,6 +151,39 @@ function AdminDashboard() {
     alert('Phone number updated successfully\nPlease logout and login again to see changes');
   };
 
+  const changePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/admin/update-password', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          oldPassword: oldPassword,
+          newPassword: newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || 'An error occurred');
+        return;
+      }
+
+      alert('Password updated successfully\nPlease logout and login again to see changes');
+    } catch (err) {
+      console.error(err);
+      alert('An unexpected error occurred');
+    }
+  };
+
   if (redirect) {
     return <Navigate to="/admin/login" />
   }
@@ -200,7 +237,7 @@ function AdminDashboard() {
             className="w-full border border-gray-300 rounded p-2"
             value={lastName}
             onChange={e => setLastName(e.target.value)}
-            disabled = {!editLastName}
+            disabled={!editLastName}
           />
           {editLastName ? (
             <Link
@@ -230,7 +267,7 @@ function AdminDashboard() {
             className="w-full border border-gray-300 rounded p-2"
             value={gender}
             onChange={e => setGender(e.target.value)}
-            disabled = {!editGender}
+            disabled={!editGender}
           />
           {editGender ? (
             <Link
@@ -260,7 +297,7 @@ function AdminDashboard() {
             className="w-full border border-gray-300 rounded p-2"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            disabled = {!editEmail}
+            disabled={!editEmail}
           />
           {editEmail ? (
             <Link
@@ -290,7 +327,7 @@ function AdminDashboard() {
             className="w-full border border-gray-300 rounded p-2"
             value={phoneNumber}
             onChange={e => setPhoneNumber(parseInt(e.target.value))}
-            disabled = {!editPhoneNumber}
+            disabled={!editPhoneNumber}
           />
           {editPhoneNumber ? (
             <Link
@@ -320,39 +357,48 @@ function AdminDashboard() {
           </h2>
         </div>
         <div className="flex justify-between items-center p-3 md:p-5 md:px-10">
-          <label
-            className="w-[74%] md:w-[15%] text-gray-800 font-semibold text-md md:text-lg"
-          >Old Password</label>
+          <label className="w-[74%] md:w-[15%] text-gray-800 font-semibold text-md md:text-lg">
+            Old Password
+          </label>
           <input
             type="password"
             className="w-full border border-gray-300 rounded p-2"
+            value={oldPassword}
+            onChange={e => setOldPassword(e.target.value)}
           />
         </div>
 
         <div className="flex justify-between items-center p-3 md:p-5 md:px-10">
-          <label
-            className="w-[74%] md:w-[15%] text-gray-800 font-semibold text-md md:text-lg"
-          >New Password</label>
+          <label className="w-[74%] md:w-[15%] text-gray-800 font-semibold text-md md:text-lg">
+            New Password
+          </label>
           <input
             type="password"
             className="w-full border border-gray-300 rounded p-2"
+            value={newPassword}
+            onChange={e => setNewPassword(e.target.value)}
           />
         </div>
 
         <div className="flex justify-between items-center p-3 md:p-5 md:px-10">
-          <label
-            className="w-[74%] md:w-[15%] text-gray-800 font-semibold text-md md:text-lg"
-          >Confirm Password</label>
+          <label className="w-[74%] md:w-[15%] text-gray-800 font-semibold text-md md:text-lg">
+            Confirm Password
+          </label>
           <input
             type="password"
             className="w-full border border-gray-300 rounded p-2"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
           />
         </div>
 
         <div className="flex justify-center items-center p-3 md:p-5 md:px-10">
           <button
             className="bg-blue-500 text-white font-semibold text-md md:text-lg p-3 rounded hover:bg-blue-600 transition duration-200 ease-in-out"
-          >Change Password</button>
+            onClick={changePassword}
+          >
+            Change Password
+          </button>
         </div>
       </div>
     </div>
