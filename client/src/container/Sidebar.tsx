@@ -116,7 +116,7 @@ const Sidebar = () => {
               <Link to="/admin/terms-and-conditions">Terms and Services</Link>
             </li>
             <li className="font-light text-sm text-gray-400 hover:text-white transition duration-300 ease-in-out cursor-pointer active:text-white active:shadow-none">
-              <Link to="#">Privacy Policy</Link>
+              <Link to="/admin/privacy-policies">Privacy Policy</Link>
             </li>
           </ul>
         </nav>

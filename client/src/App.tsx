@@ -10,6 +10,7 @@ import AdminLayout from './AdminLayout'
 import AdminManageVendors from './container/AdminManageVendors'
 import AdminAddVendor from './container/AdminAddVendor'
 import TermsAndConds from './container/TermsAndConds'
+import PrivacyPolicy from './container/PrivacyPolicy'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='manage-vendors' element={<AdminManageVendors />} />
           <Route path='add-vendor' element={<AdminAddVendor />} />
           <Route path='terms-and-conditions' element={<TermsAndConds />} />
+          <Route path='privacy-policies' element={<PrivacyPolicy />} />
         </Route>
         <Route path='/admin/register' element={<AdminRegister />} />
         <Route path='/admin/login' element={<AdminLogin />} />
