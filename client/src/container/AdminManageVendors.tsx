@@ -22,9 +22,28 @@ function AdminManageVendors() {
     } catch (error) {
       console.error(error)
     }
-  }, [])
+  }, [vendors])
 
-  const deleteVendor = async () => {}
+  const deleteVendor = async (id: string) => {
+    try {
+      await fetch(`http://localhost:3000/admin/delete-vendor/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then(response => {
+        response.json().then(data => {
+          if (!response.ok) {
+            console.error(data.message)
+          } else {
+            alert("Vendor deleted successfully")
+          }
+        })
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100 min-h-screen">
@@ -51,7 +70,7 @@ function AdminManageVendors() {
                 <td className="flex p-3 text-sm text-gray-700 space-x-2">
                   <button
                     className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out"
-                    onClick={deleteVendor}
+                    onClick={() => deleteVendor(vendor._id)}
                   >
                     Delete
                   </button>
