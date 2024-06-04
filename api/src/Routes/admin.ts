@@ -91,7 +91,6 @@ router.get("/auth-status", (req: Request, res: Response) => {
   });
 });
 
-
 router.get("/profile", (req: Request, res: Response) => {
   const { token } = req.cookies;
 
@@ -316,6 +315,21 @@ router.delete("/delete-vendor/:id", async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
   }
+})
+
+router.get("/checkAdminLoginAuth", (req: Request, res: Response) => {
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(200).json({ authenticated: false });
+  }
+
+  jwt.verify(token, secret, {}, (err, decoded) => {
+    if (err) {
+      return res.status(200).json({ authenticated: false });
+    }
+    res.status(200).json({ authenticated: true, user: decoded });
+  });
 })
 
 export default router;
