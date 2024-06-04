@@ -76,6 +76,22 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 })
 
+router.get("/auth-status", (req: Request, res: Response) => {
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(200).json({ authenticated: false });
+  }
+
+  jwt.verify(token, secret, {}, (err, decoded) => {
+    if (err) {
+      return res.status(200).json({ authenticated: false });
+    }
+    res.status(200).json({ authenticated: true, user: decoded });
+  });
+});
+
+
 router.get("/profile", (req: Request, res: Response) => {
   const { token } = req.cookies;
 

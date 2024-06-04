@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link, Navigate } from "react-router-dom"
 
 function AdminLogin() {
@@ -7,7 +7,28 @@ function AdminLogin() {
     password: ""
   })
 
-  const [ redirect, setRedirect ] = useState(false)
+  const [redirect, setRedirect] = useState(false)
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/admin/auth-status", {
+          method: "GET",
+          credentials: "include",
+        })
+
+        const data = await response.json()
+
+        if (data.authenticated) {
+          setRedirect(true)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    checkAuthStatus()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
