@@ -2,20 +2,12 @@ import { useContext, useEffect, useState } from "react"
 import { BiSolidPencil } from "react-icons/bi"
 import { CgPassword } from "react-icons/cg"
 import { CiUser } from "react-icons/ci"
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 import { AdminContext } from "../context/adminContext"
 import { MdDone } from "react-icons/md"
 
 function AdminDashboard() {
   const { adminLoggedIn } = useContext(AdminContext)!
-
-  // const userDetails = {
-  //   firstName: adminLoggedIn.firstName,
-  //   lastName: adminLoggedIn.lastName,
-  //   gender: adminLoggedIn.gender,
-  //   email: adminLoggedIn.email,
-  //   phoneNumber: adminLoggedIn.phoneNumber,
-  // }
 
   const [firstName, setFirstName] = useState(adminLoggedIn.firstName);
   const [lastName, setLastName] = useState(adminLoggedIn.lastName);
@@ -29,6 +21,8 @@ function AdminDashboard() {
   const [editEmail, setEditEmail] = useState(false);
   const [editPhoneNumber, setEditPhoneNumber] = useState(false);
 
+  const [redirect, setRedirect] = useState(false)
+
   useEffect(() => {
     setFirstName(adminLoggedIn.firstName);
     setLastName(adminLoggedIn.lastName);
@@ -36,6 +30,27 @@ function AdminDashboard() {
     setEmail(adminLoggedIn.email);
     setPhoneNumber(adminLoggedIn.phoneNumber);
   }, [adminLoggedIn]);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/admin/checkAdminLoginAuth', {
+          method: 'GET',
+          credentials: 'include',
+        })
+
+        const data = await response.json()
+
+        if (!data.authenticated) {
+          setRedirect(true)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    checkAuthStatus()
+  }, [])
 
   const handleFirstNameUpdateClick = async () => {
     try {
@@ -131,6 +146,10 @@ function AdminDashboard() {
     setEditPhoneNumber(false);
     alert('Phone number updated successfully\nPlease logout and login again to see changes');
   };
+
+  if (redirect) {
+    return <Navigate to="/admin/login" />
+  }
 
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100">
