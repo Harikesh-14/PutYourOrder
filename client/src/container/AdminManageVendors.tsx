@@ -47,7 +47,6 @@ function AdminManageVendors() {
                 <td className="p-3 text-sm text-gray-700">{vendor.email}</td>
                 <td className="p-3 text-sm text-gray-700">{vendor.phoneNumber}</td>
                 <td className="flex p-3 text-sm text-gray-700 space-x-2">
-                  <button className="bg-blue-500 text-white font-semibold text-sm p-2 rounded hover:bg-blue-600 transition duration-200 ease-in-out">Edit</button>
                   <button className="bg-red-500 text-white font-semibold text-sm p-2 rounded hover:bg-red-600 transition duration-200 ease-in-out">Delete</button>
                 </td>
               </tr>
