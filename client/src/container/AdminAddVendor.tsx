@@ -40,6 +40,14 @@ function AdminAddVendor() {
         }
       } else {
         alert("Vendor added successfully")
+        setFormData({
+          firstName: "",
+          lastName: "",
+          gender: "",
+          email: "",
+          phoneNumber: "",
+          password: "",
+        })
       }
     } catch (error) {
       console.error("Add vendor error:", error)
