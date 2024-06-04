@@ -9,6 +9,7 @@ import AdminDashboard from './container/AdminDashboard'
 import AdminLayout from './AdminLayout'
 import AdminManageVendors from './container/AdminManageVendors'
 import AdminAddVendor from './container/AdminAddVendor'
+import TermsAndConds from './container/TermsAndConds'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='dashboard' element={<AdminDashboard />} />
           <Route path='manage-vendors' element={<AdminManageVendors />} />
           <Route path='add-vendor' element={<AdminAddVendor />} />
+          <Route path='terms-and-conditions' element={<TermsAndConds />} />
         </Route>
         <Route path='/admin/register' element={<AdminRegister />} />
         <Route path='/admin/login' element={<AdminLogin />} />
@@ -25,6 +27,8 @@ function App() {
         <Route path='/' element={<Layout />} >
           <Route index element={<VendorLogin />} />
         </Route>
+
+        <Route path='*' element={<h1>Not Found</h1>} />
       </Routes>
     </>
   )
