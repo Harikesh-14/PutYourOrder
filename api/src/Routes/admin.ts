@@ -262,6 +262,37 @@ router.put("/update-phoneNumber", async (req: Request, res: Response) => {
   });
 });
 
+router.put("/update-password", async (req: Request, res: Response) => {
+  const { password } = req.body;
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  jwt.verify(token, secret, {}, async (err, decoded) => {
+    if (err) {
+      console.error('JWT verification error:', err);
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+      const hashedPassword = bcrypt.hashSync(password, salt);
+      const info = decoded as JwtPayload;
+      const updatedAdmin = await adminModel.findByIdAndUpdate(info.id, { password: hashedPassword }, { new: true });
+
+      if (!updatedAdmin) {
+        return res.status(404).json({ error: 'Admin not found' });
+      }
+
+      return res.status(200).json({ message: 'Password updated successfully', updatedAdmin });
+    } catch (updateError) {
+      console.error('Database update error:', updateError);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+})
+
 router.post("/add-vendor", async (req: Request, res: Response) => {
   const { firstName, lastName, gender, email, phoneNumber, password } = req.body;
 
