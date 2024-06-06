@@ -11,6 +11,7 @@ import AdminManageVendors from './container/AdminManageVendors'
 import AdminAddVendor from './container/AdminAddVendor'
 import TermsAndConds from './container/TermsAndConds'
 import PrivacyPolicy from './container/PrivacyPolicy'
+import VendorHomePage from './pages/VendorHomePage'
 
 function App() {
   return (
@@ -26,8 +27,9 @@ function App() {
         <Route path='/admin/register' element={<AdminRegister />} />
         <Route path='/admin/login' element={<AdminLogin />} />
 
+        <Route path='/vendor/login' element={<VendorLogin />} />
         <Route path='/' element={<Layout />} >
-          <Route index element={<VendorLogin />} />
+          <Route index element={<VendorHomePage />} />
         </Route>
 
         <Route path='*' element={<h1>Not Found</h1>} />
