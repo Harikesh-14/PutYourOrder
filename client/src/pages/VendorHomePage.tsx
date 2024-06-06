@@ -1,6 +1,10 @@
+import VendorSidebar from "../container/VendorSidebar"
+
 function VendorHomePage() {
   return (
-    <div>VendorHomePage</div>
+    <div>
+      <VendorSidebar />
+    </div>
   )
 }
 
