@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
 import { VendorTypes } from "../src/types";
 
@@ -26,6 +25,10 @@ const vendorSchema = new Schema({
   password: {
     type: String,
     required: true,
+  },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "Admin",
   },
 }, {
   timestamps: true,
