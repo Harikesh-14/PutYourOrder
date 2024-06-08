@@ -21,6 +21,10 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "admin",
+  },
 }, {
   timestamps: true,
 });

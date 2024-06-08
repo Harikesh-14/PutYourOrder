@@ -19,6 +19,10 @@ const uploadMiddleware = multer({ dest: path.join(__dirname, "../../uploads") })
 
 router.use(cookieParser());
 
+interface CustomJwtPayload extends JwtPayload {
+  id: string;
+}
+
 router.post("/register", async (req: Request, res: Response) => {
   const { firstName, lastName, gender, email, phoneNumber, password } = req.body;
 
@@ -363,46 +367,64 @@ router.delete("/delete-vendor/:id", async (req: Request, res: Response) => {
   }
 })
 
+
 router.post("/add-product", uploadMiddleware.single('productImage'), async (req: Request, res: Response) => {
   try {
     const file = req.file;
-    if (file) {
-      const { originalname, path } = file;
-      const parts = originalname.split(".");
-      const extension = parts[parts.length - 1];
-      const newPath = path + "." + extension;
-      fs.renameSync(path, newPath);
+    if (!file) {
+      return res.status(400).json({ error: 'File not found' });
+    }
 
-      const { token } = req.cookies
-      jwt.verify(token, secret, {}, async (err, decoded) => {
-        if (err) {
-          console.error('JWT verification error:', err);
-          return res.status(401).json({ error: 'Unauthorized' });
-        }
+    const { originalname, path: tempPath } = file;
+    const extension = path.extname(originalname);
+    const newPath = tempPath + extension;
 
+    fs.renameSync(tempPath, newPath);
+
+    const { token } = req.cookies;
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized: No token provided' });
+    }
+
+    jwt.verify(token, secret, {}, async (err, decoded) => {
+      if (err) {
+        console.error('JWT verification error:', err);
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      if (typeof decoded === 'object' && 'id' in decoded) {
+        const { id } = decoded as CustomJwtPayload;
+        
         const { productName, productPrice, productCategory, productDescription } = req.body;
         const productImage = newPath;
 
-        const newProduct = await productModel.create({
-          productName,
-          productPrice,
-          productCategory,
-          productDescription,
-          productImage,
-        })
+        try {
+          const newProduct = await productModel.create({
+            productName,
+            productPrice,
+            productCategory,
+            productDescription,
+            productImage,
+            author: id,
+          });
 
-        res.status(201).json({
-          message: "Product added successfully",
-          data: newProduct,
-        })
-      })
-    } else {
-      throw new Error("File not found");
-    }
+          res.status(201).json({
+            message: "Product added successfully",
+            data: newProduct,
+          });
+        } catch (dbError) {
+          console.error('Database error:', dbError);
+          res.status(500).json({ error: 'Internal Server Error' });
+        }
+      } else {
+        res.status(401).json({ error: 'Unauthorized' });
+      }
+    });
   } catch (err) {
-    console.error(err);
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-})
+});
 
 router.get("/checkAdminLoginAuth", (req: Request, res: Response) => {
   const { token } = req.cookies;

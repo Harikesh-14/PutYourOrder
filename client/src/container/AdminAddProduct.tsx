@@ -49,6 +49,13 @@ function AdminAddProduct() {
 
       if (response.ok) {
         alert("Product added successfully")
+        setFormData({
+          productName: "",
+          productPrice: 0,
+          productCategory: "",
+          productDescription: "",
+          productImage: null,
+        })
       } else {
         alert("Failed to add product")
       }
