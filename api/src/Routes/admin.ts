@@ -367,7 +367,6 @@ router.delete("/delete-vendor/:id", async (req: Request, res: Response) => {
   }
 })
 
-
 router.post("/add-product", uploadMiddleware.single('productImage'), async (req: Request, res: Response) => {
   try {
     const file = req.file;
@@ -425,6 +424,15 @@ router.post("/add-product", uploadMiddleware.single('productImage'), async (req:
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+router.get("/view-products", async (req: Request, res: Response) => {
+  try {
+    const products = await productModel.find()
+    res.status(200).json(products)
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
 
 router.get("/checkAdminLoginAuth", (req: Request, res: Response) => {
   const { token } = req.cookies;
