@@ -3,6 +3,7 @@ import cookiesParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import path from 'path';
 
 import adminRoutes from "./Routes/admin";
 
@@ -17,7 +18,7 @@ app.use(cors({
   origin: "http://localhost:5173",
   credentials: true,
 }))
-app.use('/uploads', express.static('../uploads'));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 mongoose.connect(process.env.CLUSTER_URI as string).then(() => {
   console.log("Connected to MongoDB");

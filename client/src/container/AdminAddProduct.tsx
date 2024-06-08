@@ -41,7 +41,17 @@ function AdminAddProduct() {
     }
     
     try {
-      // connect to the server
+      const response = await fetch("http://localhost:3000/admin/add-product", {
+        method: "POST",
+        credentials: "include",
+        body: addFormData,
+      })
+
+      if (response.ok) {
+        alert("Product added successfully")
+      } else {
+        alert("Failed to add product")
+      }
     } catch (error) {
       console.error(error)
     }

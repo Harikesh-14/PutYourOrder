@@ -15,7 +15,7 @@ dotenv.config();
 const router = Router();
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET_KEY as string;
-const uploadMiddleware = multer({ dest: "../../uploads"});
+const uploadMiddleware = multer({ dest: path.join(__dirname, "../../uploads") });
 
 router.use(cookieParser());
 
