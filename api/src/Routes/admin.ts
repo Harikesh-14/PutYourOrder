@@ -2,6 +2,9 @@ import { Request, Response, Router } from "express";
 import bcrypt from "bcryptjs"
 import jwt, { JwtPayload } from "jsonwebtoken"
 import cookieParser from "cookie-parser";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 
 import adminModel from "../../models/admin";
@@ -11,6 +14,7 @@ dotenv.config();
 const router = Router();
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET_KEY as string;
+const uploadMiddleware = multer({ dest: "../../uploads"});
 
 router.use(cookieParser());
 
@@ -303,7 +307,6 @@ router.put("/update-password", async (req: Request, res: Response) => {
   });
 });
 
-
 router.post("/add-vendor", async (req: Request, res: Response) => {
   const { firstName, lastName, gender, email, phoneNumber, password } = req.body;
 
@@ -357,6 +360,10 @@ router.delete("/delete-vendor/:id", async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
   }
+})
+
+router.post("/add-product", uploadMiddleware.single('productImage'), async (req: Request, res: Response) => {
+  
 })
 
 router.get("/checkAdminLoginAuth", (req: Request, res: Response) => {
