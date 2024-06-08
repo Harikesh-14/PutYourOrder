@@ -8,6 +8,7 @@ import AdminDashboard from './container/AdminDashboard'
 import AdminLayout from './AdminLayout'
 import AdminManageVendors from './container/AdminManageVendors'
 import AdminAddVendor from './container/AdminAddVendor'
+import AdminAddProduct from './container/AdminAddProduct'
 import TermsAndConds from './container/TermsAndConds'
 import PrivacyPolicy from './container/PrivacyPolicy'
 import VendorHomePage from './pages/VendorHomePage'
@@ -20,13 +21,14 @@ function App() {
           <Route path='dashboard' element={<AdminDashboard />} />
           <Route path='manage-vendors' element={<AdminManageVendors />} />
           <Route path='add-vendor' element={<AdminAddVendor />} />
+          <Route path='add-product' element={<AdminAddProduct />} />
           <Route path='terms-and-conditions' element={<TermsAndConds />} />
           <Route path='privacy-policies' element={<PrivacyPolicy />} />
         </Route>
         <Route path='/admin/register' element={<AdminRegister />} />
         <Route path='/admin/login' element={<AdminLogin />} />
 
-        <Route path='/vendor/login' element={<VendorLogin />} />
+        <Route path='/login' element={<VendorLogin />} />
         <Route path='/' element={<Layout />} >
           <Route index element={<VendorHomePage />} />
         </Route>

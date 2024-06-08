@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { BsHouseFill, BsCurrencyRupee } from 'react-icons/bs';
 import { SiManageiq } from 'react-icons/si';
-import { BiUserPlus, BiLogOut } from 'react-icons/bi';
+import { BiUserPlus, BiLogOut, BiBowlHot } from 'react-icons/bi';
 import { AdminContext } from '../context/adminContext';
 
 const Sidebar = () => {
@@ -102,6 +102,10 @@ const Sidebar = () => {
             <li className="flex items-center gap-2 py-2 px-4 rounded-md text-white text-lg border hover:bg-blue-500 hover:border-blue-500 transition duration-300 ease-in-out active:bg-blue-700 active:shadow-none cursor-pointer">
               <BiUserPlus className="inline-block" size={20} />
               <Link to={"/admin/add-vendor"}>Add Vendor</Link>
+            </li>
+            <li className="flex items-center gap-2 py-2 px-4 rounded-md text-white text-lg border hover:bg-blue-500 hover:border-blue-500 transition duration-300 ease-in-out active:bg-blue-700 active:shadow-none cursor-pointer">
+              <BiBowlHot className="inline-block" size={20} />
+              <Link to="/admin/add-product">Add Product</Link>
             </li>
             <li className="flex items-center gap-2 py-2 px-4 rounded-md text-white text-lg border hover:bg-blue-500 hover:border-blue-500 transition duration-300 ease-in-out active:bg-blue-700 active:shadow-none cursor-pointer">
               <BsCurrencyRupee className="inline-block" size={20} />

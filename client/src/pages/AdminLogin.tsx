@@ -140,7 +140,7 @@ function AdminLogin() {
               Not an admin?
             </p>
             <Link
-              to={"/"}
+              to={"/login"}
               className="text-blue-500 text-sm font-light text-center hover:underline transition duration-300 ease-in-out"
             >
               Vendor
