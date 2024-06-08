@@ -314,6 +314,7 @@ router.put("/update-password", async (req: Request, res: Response) => {
 
 router.post("/add-vendor", async (req: Request, res: Response) => {
   const { firstName, lastName, gender, email, phoneNumber, password } = req.body;
+  const { token } = req.cookies;
 
   try{
     const existingVendor = await vendorModel.findOne({ email })
@@ -322,20 +323,31 @@ router.post("/add-vendor", async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Vendor already exists" });
     }
 
-    const hashedPassword = bcrypt.hashSync(password, salt); 
+    jwt.verify(token, secret, {}, async (err, decoded) => {
+      if (err) {
+        console.error('JWT verification error:', err);
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
 
-    const newVendor = await vendorModel.create({
-      firstName,
-      lastName,
-      gender,
-      email,
-      phoneNumber,
-      password: hashedPassword,
-    })
+      if (typeof decoded === 'object' && 'id' in decoded) {
+        const { id } = decoded as CustomJwtPayload;
 
-    res.status(201).json({
-      message: "Vendor registered successfully",
-      data: newVendor,
+        const hashedPassword = bcrypt.hashSync(password, salt);
+        const newVendor = await vendorModel.create({
+          firstName,
+          lastName,
+          gender,
+          email,
+          phoneNumber,
+          password: hashedPassword,
+          author: id,
+        });
+
+        res.status(201).json({
+          message: "Vendor added successfully",
+          data: newVendor,
+        });
+      }
     })
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
