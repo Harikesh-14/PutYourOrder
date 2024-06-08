@@ -121,7 +121,7 @@ function AdminAddProduct() {
 
         <div className="flex flex-col gap-3 md:flex-row md:justify-between md:items-center p-3 md:p-5 md:px-10">
           <button
-            className="w-full md:w-[15%] mx-auto py-2 bg-blue-500 text-white rounded-md font-semibold text-lg"
+            className="w-full md:w-[25%] mx-auto py-2 bg-blue-500 text-white rounded-md font-semibold text-lg"
             type="submit"
           >
             Add Product

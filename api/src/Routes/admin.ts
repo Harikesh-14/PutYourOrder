@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 
 import adminModel from "../../models/admin";
 import vendorModel from "../../models/vendor";
+import productModel from "../../models/products";
 
 dotenv.config();
 const router = Router();
@@ -363,7 +364,44 @@ router.delete("/delete-vendor/:id", async (req: Request, res: Response) => {
 })
 
 router.post("/add-product", uploadMiddleware.single('productImage'), async (req: Request, res: Response) => {
-  
+  try {
+    const file = req.file;
+    if (file) {
+      const { originalname, path } = file;
+      const parts = originalname.split(".");
+      const extension = parts[parts.length - 1];
+      const newPath = path + "." + extension;
+      fs.renameSync(path, newPath);
+
+      const { token } = req.cookies
+      jwt.verify(token, secret, {}, async (err, decoded) => {
+        if (err) {
+          console.error('JWT verification error:', err);
+          return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const { productName, productPrice, productCategory, productDescription } = req.body;
+        const productImage = newPath;
+
+        const newProduct = await productModel.create({
+          productName,
+          productPrice,
+          productCategory,
+          productDescription,
+          productImage,
+        })
+
+        res.status(201).json({
+          message: "Product added successfully",
+          data: newProduct,
+        })
+      })
+    } else {
+      throw new Error("File not found");
+    }
+  } catch (err) {
+    console.error(err);
+  }
 })
 
 router.get("/checkAdminLoginAuth", (req: Request, res: Response) => {
