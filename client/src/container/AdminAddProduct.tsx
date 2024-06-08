@@ -72,6 +72,7 @@ function AdminAddProduct() {
         className="my-7 bg-white border-b border-gray-300"
         method="POST"
         onSubmit={addProduct}
+        encType="multipart/form-data"
       >
         <div className="flex flex-col gap-3 md:flex-row md:justify-between md:items-center p-3 md:p-5 md:px-10">
           <label className="w-[74%] md:w-[25%] text-gray-800 font-semibold text-md md:text-lg">Product's name</label>
