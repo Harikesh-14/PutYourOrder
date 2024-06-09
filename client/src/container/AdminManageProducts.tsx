@@ -31,15 +31,15 @@ function AdminManageProducts() {
     }
   }, []);
 
-  
+  const filteredProducts = products.filter(product =>
+    product.productName.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-semibold text-gray-800">Manage Products</h1>
 
-      <div
-        className="flex flex-row justify-between items-center mt-5"
-      >
+      <div className="flex flex-row justify-between items-center mt-5">
         <input
           type="text"
           placeholder="Search Products"
@@ -49,10 +49,8 @@ function AdminManageProducts() {
         />
       </div>
 
-      <div
-      className="flex flex-row gap-6 flex-wrap"
-      >
-        {products.map((product) => (
+      <div className="flex flex-row gap-6 flex-wrap">
+        {filteredProducts.map((product) => (
           <div key={product.productName}
             className="md:w-[48.85%] flex flex-row gap-3 mt-10 md:mt-5 cursor-pointer transition-transform duration-300 ease-in-out hover:shadow-md hover:scale-105"
           >
