@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 type ProductT = {
+  _id: string;
   productName: string;
   productPrice: number;
   productCategory: string;
@@ -13,14 +14,45 @@ function AdminManageProducts() {
   const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
+    fetchProducts();
+  }, []);
+  
+
+  const filteredProducts = products.filter(product =>
+    product.productName.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const fetchProducts = async () => {
     try {
-      fetch('http://localhost:3000/admin/view-products', {
+      const response = await fetch('http://localhost:3000/admin/view-products', {
         method: 'GET',
-        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setProducts(data);
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };  
+
+  const deleteProduct = async (id: string) => {
+    try {
+      await fetch(`http://localhost:3000/admin/delete-product/${id}`, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json",
+        },
       }).then(response => {
         response.json().then(data => {
           if (response.ok) {
-            setProducts(data);
+            fetchProducts(); // Fetch updated list of products
+            alert('Product deleted successfully!');
           } else {
             console.log(data);
           }
@@ -29,11 +61,7 @@ function AdminManageProducts() {
     } catch (error) {
       console.error(error);
     }
-  }, []);
-
-  const filteredProducts = products.filter(product =>
-    product.productName.toLowerCase().includes(search.toLowerCase())
-  );
+  }  
 
   return (
     <div className="md:ml-[20rem] p-10 bg-gray-100 min-h-screen">
@@ -73,6 +101,7 @@ function AdminManageProducts() {
               <div className="flex flex-row justify-center gap-3 mt-5">
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ease-in-out hover:shadow-md"
+                  onClick={() => deleteProduct(product._id)}
                 >Delete</button>
               </div>
             </div>
