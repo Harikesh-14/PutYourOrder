@@ -453,6 +453,22 @@ router.get("/view-products", async (req: Request, res: Response) => {
   }
 })
 
+router.delete("/delete-product/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const deletedProduct = await productModel.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
+
 router.get("/checkAdminLoginAuth", (req: Request, res: Response) => {
   const { token } = req.cookies;
 
