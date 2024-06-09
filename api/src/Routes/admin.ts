@@ -15,7 +15,18 @@ dotenv.config();
 const router = Router();
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET_KEY as string;
-const uploadMiddleware = multer({ dest: '../../uploads/' });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../../uploads'));
+  },
+
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+})
+const uploadMiddleware = multer({ storage });
 
 router.use(cookieParser());
 
@@ -386,11 +397,8 @@ router.post("/add-product", uploadMiddleware.single('productImage'), async (req:
       return res.status(400).json({ error: 'File not found' });
     }
 
-    const { originalname, path: tempPath } = file;
-    const extension = path.extname(originalname);
-    const newPath = tempPath + extension;
-
-    fs.renameSync(tempPath, newPath);
+    const { filename } = file
+    const productImage = `uploads/${filename}`
 
     const { token } = req.cookies;
     if (!token) {
@@ -407,7 +415,6 @@ router.post("/add-product", uploadMiddleware.single('productImage'), async (req:
         const { id } = decoded as CustomJwtPayload;
         
         const { productName, productPrice, productCategory, productDescription } = req.body;
-        const productImage = newPath;
 
         try {
           const newProduct = await productModel.create({
