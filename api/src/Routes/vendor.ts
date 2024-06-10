@@ -69,4 +69,19 @@ router.post('/logout', (req: Request, res: Response) => {
   res.clearCookie("token").json({ message: "Vendor logged out successfully" });
 })
 
+router.get("/checkVendorLoginAuth", (req: Request, res: Response) => {
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(200).json({ authenticated: false });
+  }
+
+  jwt.verify(token, secret, {}, (err, decoded) => {
+    if (err) {
+      return res.status(200).json({ authenticated: false });
+    }
+    res.status(200).json({ authenticated: true, user: decoded });
+  });
+})
+
 export default router;

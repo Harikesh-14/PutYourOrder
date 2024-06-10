@@ -8,6 +8,7 @@ import { VendorContext } from "../context/vendorContext"
 function VendorSidebar() {
   const [showSidebar, setShowSidebar] = useState(false)
   const [redirect, setRedirect] = useState<boolean>(false)
+  const [isLogin, setIsLogin] = useState<boolean>(false)
 
   const { vendorLoggedIn, setVendorLoggedIn, isVendorLoggedIn, setIsVendorLoggedIn } = useContext(VendorContext)!
 
@@ -25,6 +26,30 @@ function VendorSidebar() {
     } catch (error) {
       console.log(error)
     }
+  }, [])
+
+  useEffect(() => {
+    const checkVendorLoginAuth = async () => {
+      try {
+        let response = await fetch("http://localhost:3000/vendor/checkVendorLoginAuth", {
+          method: "GET",
+          credentials: "include"
+        })
+
+        if (response.ok) {
+          let data = await response.json()
+          if (data.authenticated) {
+            setIsLogin(true)
+          } else {
+            setRedirect(false)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    checkVendorLoginAuth()
   }, [])
 
   const vendorDetails = {
@@ -62,6 +87,10 @@ function VendorSidebar() {
   }
 
   if (redirect) {
+    return <Navigate to="/login" />
+  }
+
+  if (!isLogin) {
     return <Navigate to="/login" />
   }
 

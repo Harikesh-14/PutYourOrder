@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 
 function VendorLogin() {
@@ -7,6 +7,29 @@ function VendorLogin() {
     password: ""
   })
   const [ redirect, setRedirect ] = useState<boolean>(false)
+  const [isLogin, setIsLogin] = useState<boolean>(false)
+
+  useEffect(() =>{
+    const checkVendorLoginAuth = async () => {
+      try {
+        let response = await fetch("http://localhost:3000/vendor/checkVendorLoginAuth", {
+          method: "GET",
+          credentials: "include"
+        })
+
+        if(response.ok){
+          let data = await response.json()
+          if(data.authenticated){
+            setIsLogin(true)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    checkVendorLoginAuth()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -50,6 +73,10 @@ function VendorLogin() {
   }
 
   if(redirect){
+    return <Navigate to="/" />
+  }
+
+  if(isLogin){
     return <Navigate to="/" />
   }
 
