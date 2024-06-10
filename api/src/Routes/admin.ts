@@ -4,7 +4,6 @@ import jwt, { JwtPayload } from "jsonwebtoken"
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
 import dotenv from "dotenv";
 
 import adminModel from "../../models/admin";

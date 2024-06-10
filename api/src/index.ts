@@ -6,6 +6,7 @@ import cors from 'cors';
 import path from 'path';
 
 import adminRoutes from "./Routes/admin";
+import vendorRoutes from "./Routes/vendor";
 
 dotenv.config();
 const app: Application = express();
@@ -28,6 +29,7 @@ mongoose.connect(process.env.CLUSTER_URI as string).then(() => {
 });
 
 app.use('/admin', adminRoutes);
+app.use('vendor', vendorRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World');
