@@ -2,10 +2,30 @@ import { useState } from "react"
 import { BiLogOut } from "react-icons/bi"
 import { BsHouseFill } from "react-icons/bs"
 import { SiManageiq } from "react-icons/si"
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 
 function VendorSidebar() {
   const [showSidebar, setShowSidebar] = useState(false)
+  const [redirect, setRedirect] = useState<boolean>(false)
+
+  const logoutUser = async () => {
+    try {
+      let response = await fetch("http://localhost:3000/vendor/logout", {
+        method: "POST",
+        credentials: "include"
+      })
+
+      if(response.ok){
+        setRedirect(true)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  if(redirect){
+    return <Navigate to="/login" />
+  }
 
   return (
     <div>
@@ -67,7 +87,7 @@ function VendorSidebar() {
             <Link
               to="#"
               className="inline-flex items-center gap-2 py-2 px-4 rounded-md shadow-md text-white text-lg bg-red-500 hover:bg-red-600 transition duration-300 ease-in-out active:bg-red-700 active:shadow-none cursor-pointer"
-            // onClick={logoutUser}
+              onClick={logoutUser}
             >
               Logout
               <BiLogOut className="inline-block rotate-180" size={20} />

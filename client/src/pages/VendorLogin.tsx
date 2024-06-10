@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 
 function VendorLogin() {
   const [ formData, setFormData ] = useState({
     email: "",
     password: ""
   })
+  const [ redirect, setRedirect ] = useState<boolean>(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -15,9 +16,41 @@ function VendorLogin() {
     })
   }
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(formData)
+    
+    try {
+      let response = await fetch("http://localhost:3000/vendor/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData),
+        credentials: "include"
+      })
+
+      if(!response.ok){
+        let errorData = await response.json()
+
+        if(errorData.message === "Vendor does not exist"){
+          alert("Vendor does not exist")
+        } else if (errorData.message === "Please enter all fields") {
+          alert("Please enter all fields")
+        } else if (errorData.message === "Invalid credentials") {
+          alert("Invalid credentials")
+        } else {
+          alert("Internal server error")
+        }
+      } else {
+        setRedirect(true)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  if(redirect){
+    return <Navigate to="/" />
   }
 
   return (

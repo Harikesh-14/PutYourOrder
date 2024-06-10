@@ -29,7 +29,7 @@ mongoose.connect(process.env.CLUSTER_URI as string).then(() => {
 });
 
 app.use('/admin', adminRoutes);
-app.use('vendor', vendorRoutes);
+app.use('/vendor', vendorRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World');

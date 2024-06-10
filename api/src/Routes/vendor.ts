@@ -49,4 +49,8 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 })
 
+router.post('/logout', (req: Request, res: Response) => {
+  res.clearCookie("token").json({ message: "Vendor logged out successfully" });
+})
+
 export default router;
