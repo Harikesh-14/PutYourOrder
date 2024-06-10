@@ -1,7 +1,7 @@
 import { Router, Response, Request } from "express";
 import cookieParser from "cookie-parser";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import dotenv from "dotenv";
 
 import vendorModel from "../../models/vendor";
@@ -47,6 +47,22 @@ router.post('/login', async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
+})
+
+router.get('/profile', async (req: Request, res: Response) => {
+  const { token } = req.cookies
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  jwt.verify(token, secret, {}, (err, decode) => {
+    if (err) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    res.json(decode);
+  })
 })
 
 router.post('/logout', (req: Request, res: Response) => {

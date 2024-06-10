@@ -117,7 +117,6 @@ router.get("/profile", (req: Request, res: Response) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-
   jwt.verify(token, secret, {}, (err, info) => {
     if (err) {
       console.error('JWT verification error:', err);
