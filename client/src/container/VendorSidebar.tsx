@@ -1,12 +1,40 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { BiLogOut } from "react-icons/bi"
 import { BsHouseFill } from "react-icons/bs"
 import { SiManageiq } from "react-icons/si"
 import { Link, Navigate } from "react-router-dom"
+import { VendorContext } from "../context/vendorContext"
 
 function VendorSidebar() {
   const [showSidebar, setShowSidebar] = useState(false)
   const [redirect, setRedirect] = useState<boolean>(false)
+
+  const { vendorLoggedIn, setVendorLoggedIn, isVendorLoggedIn, setIsVendorLoggedIn } = useContext(VendorContext)!
+
+  useEffect(() => {
+    try {
+      fetch("http://localhost:3000/vendor/profile", {
+        method: "GET",
+        credentials: "include"
+      }).then(response => {
+        response.json().then(data => {
+          setVendorLoggedIn(data)
+          setIsVendorLoggedIn(true)
+        })
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
+  const vendorDetails = {
+    id: vendorLoggedIn.id,
+    firstName: vendorLoggedIn.firstName,
+    lastName: vendorLoggedIn.lastName,
+    gender: vendorLoggedIn.gender,
+    email: vendorLoggedIn.email,
+    phoneNumber: vendorLoggedIn.phoneNumber,
+  }
 
   const logoutUser = async () => {
     try {
@@ -15,15 +43,25 @@ function VendorSidebar() {
         credentials: "include"
       })
 
-      if(response.ok){
+      if (response.ok) {
         setRedirect(true)
+        setVendorLoggedIn({
+          id: "",
+          firstName: "",
+          lastName: "",
+          gender: "",
+          email: "",
+          phoneNumber: 0,
+          message: ""
+        })
+        setIsVendorLoggedIn(false)
       }
     } catch (error) {
       console.log(error)
     }
   }
 
-  if(redirect){
+  if (redirect) {
     return <Navigate to="/login" />
   }
 
@@ -55,8 +93,8 @@ function VendorSidebar() {
 
           <div className="text-center mt-4">
             <h1 className="text-xl font-semibold">Vendor</h1>
-            <p className="text-gray-400">{"Harikesh"}</p>
-            <p className="text-gray-400 text-sm">@{"sdkb32b4b234bjk2"}</p>
+            <p className="text-gray-400">{vendorDetails.firstName}</p>
+            <p className="text-gray-400 text-sm">@{vendorDetails.id}</p>
           </div>
 
           <nav className="flex flex-col mt-6">
@@ -83,16 +121,18 @@ function VendorSidebar() {
             </ul>
           </nav>
 
-          <div className="text-center mt-6 mb-4">
-            <Link
-              to="#"
-              className="inline-flex items-center gap-2 py-2 px-4 rounded-md shadow-md text-white text-lg bg-red-500 hover:bg-red-600 transition duration-300 ease-in-out active:bg-red-700 active:shadow-none cursor-pointer"
-              onClick={logoutUser}
-            >
-              Logout
-              <BiLogOut className="inline-block rotate-180" size={20} />
-            </Link>
-          </div>
+          {isVendorLoggedIn && (
+            <div className="text-center mt-6 mb-4">
+              <Link
+                to="#"
+                className="inline-flex items-center gap-2 py-2 px-4 rounded-md shadow-md text-white text-lg bg-red-500 hover:bg-red-600 transition duration-300 ease-in-out active:bg-red-700 active:shadow-none cursor-pointer"
+                onClick={logoutUser}
+              >
+                Logout
+                <BiLogOut className="inline-block rotate-180" size={20} />
+              </Link>
+            </div>
+          )}
 
         </div>
 
