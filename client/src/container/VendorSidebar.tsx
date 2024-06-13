@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { BiLogOut } from "react-icons/bi"
+import { BiHistory, BiLogOut } from "react-icons/bi"
 import { BsHouseFill } from "react-icons/bs"
 import { SiManageiq } from "react-icons/si"
 import { Link, Navigate } from "react-router-dom"
@@ -8,7 +8,7 @@ import { VendorContext } from "../context/vendorContext"
 function VendorSidebar() {
   const [showSidebar, setShowSidebar] = useState(false)
   const [redirect, setRedirect] = useState<boolean>(false)
-  const [isLogin, setIsLogin] = useState<boolean>(false)
+  const [isLogin, setIsLogin] = useState<boolean>(true)
 
   const { vendorLoggedIn, setVendorLoggedIn, isVendorLoggedIn, setIsVendorLoggedIn } = useContext(VendorContext)!
 
@@ -40,8 +40,6 @@ function VendorSidebar() {
           let data = await response.json()
           if (data.authenticated) {
             setIsLogin(true)
-          } else {
-            setRedirect(false)
           }
         }
       } catch (error) {
@@ -89,7 +87,7 @@ function VendorSidebar() {
   if (redirect) {
     return <Navigate to="/login" />
   }
-
+  
   if (!isLogin) {
     return <Navigate to="/login" />
   }
@@ -135,6 +133,10 @@ function VendorSidebar() {
               <li className="flex items-center gap-2 py-2 px-4 rounded-md text-white text-lg border hover:bg-blue-500 hover:border-blue-500 transition duration-300 ease-in-out active:bg-blue-700 active:shadow-none cursor-pointer">
                 <SiManageiq className="inline-block" size={20} />
                 <Link to={"#"}>Manage Cart</Link>
+              </li>
+              <li className="flex items-center gap-2 py-2 px-4 rounded-md text-white text-lg border hover:bg-blue-500 hover:border-blue-500 transition duration-300 ease-in-out active:bg-blue-700 active:shadow-none cursor-pointer">
+                <BiHistory className="inline-block" size={20} />
+                <Link to={"#"}>Order History</Link>
               </li>
             </ul>
           </nav>

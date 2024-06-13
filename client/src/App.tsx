@@ -11,7 +11,7 @@ import AdminAddVendor from './container/AdminAddVendor'
 import AdminAddProduct from './container/AdminAddProduct'
 import TermsAndConds from './container/TermsAndConds'
 import PrivacyPolicy from './container/PrivacyPolicy'
-import VendorHomePage from './pages/VendorHomePage'
+import VendorHomePage from './container/VendorHomePage'
 import AdminManageProducts from './container/AdminManageProducts'
 
 function App() {
