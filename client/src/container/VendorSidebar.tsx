@@ -1,73 +1,85 @@
-import { useContext, useEffect, useState } from "react"
-import { BiHistory, BiLogOut } from "react-icons/bi"
-import { BsHouseFill } from "react-icons/bs"
-import { SiManageiq } from "react-icons/si"
-import { Link, Navigate } from "react-router-dom"
-import { VendorContext } from "../context/vendorContext"
+import { useContext, useEffect, useState } from "react";
+import { BiHistory, BiLogOut } from "react-icons/bi";
+import { BsHouseFill } from "react-icons/bs";
+import { SiManageiq } from "react-icons/si";
+import { Link, Navigate } from "react-router-dom";
+import { VendorContext } from "../context/vendorContext";
 
 function VendorSidebar() {
-  const [showSidebar, setShowSidebar] = useState(false)
-  const [redirect, setRedirect] = useState<boolean>(false)
-  const [isLogin, setIsLogin] = useState<boolean>(true)
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
-  const { vendorLoggedIn, setVendorLoggedIn, isVendorLoggedIn, setIsVendorLoggedIn } = useContext(VendorContext)!
+  const {
+    vendorLoggedIn,
+    setVendorLoggedIn,
+    isVendorLoggedIn,
+    setIsVendorLoggedIn,
+  } = useContext(VendorContext)!;
 
   useEffect(() => {
-    try {
-      fetch("http://localhost:3000/vendor/profile", {
-        method: "GET",
-        credentials: "include"
-      }).then(response => {
-        response.json().then(data => {
-          setVendorLoggedIn(data)
-          setIsVendorLoggedIn(true)
-        })
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
+    const fetchVendorProfile = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/vendor/profile", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setVendorLoggedIn(data);
+          setIsVendorLoggedIn(true);
+        } else {
+          setIsVendorLoggedIn(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsVendorLoggedIn(false);
+      }
+    };
+
+    fetchVendorProfile();
+  }, [setVendorLoggedIn, setIsVendorLoggedIn]);
 
   useEffect(() => {
     const checkVendorLoginAuth = async () => {
       try {
-        let response = await fetch("http://localhost:3000/vendor/checkVendorLoginAuth", {
-          method: "GET",
-          credentials: "include"
-        })
+        const response = await fetch(
+          "http://localhost:3000/vendor/checkVendorLoginAuth",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (response.ok) {
-          let data = await response.json()
-          if (data.authenticated) {
-            setIsLogin(true)
+          const data = await response.json();
+          setIsLogin(data.authenticated);
+          if (!data.authenticated) {
+            setRedirect(true);
           }
+        } else {
+          setIsLogin(false);
+          setRedirect(true);
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
+        setIsLogin(false);
+        setRedirect(true);
       }
-    }
+    };
 
-    checkVendorLoginAuth()
-  }, [])
-
-  const vendorDetails = {
-    id: vendorLoggedIn.id,
-    firstName: vendorLoggedIn.firstName,
-    lastName: vendorLoggedIn.lastName,
-    gender: vendorLoggedIn.gender,
-    email: vendorLoggedIn.email,
-    phoneNumber: vendorLoggedIn.phoneNumber,
-  }
+    checkVendorLoginAuth();
+  }, []);
 
   const logoutUser = async () => {
     try {
-      let response = await fetch("http://localhost:3000/vendor/logout", {
+      const response = await fetch("http://localhost:3000/vendor/logout", {
         method: "POST",
-        credentials: "include"
-      })
+        credentials: "include",
+      });
 
       if (response.ok) {
-        setRedirect(true)
+        setRedirect(true);
         setVendorLoggedIn({
           id: "",
           firstName: "",
@@ -75,29 +87,26 @@ function VendorSidebar() {
           gender: "",
           email: "",
           phoneNumber: 0,
-          message: ""
-        })
-        setIsVendorLoggedIn(false)
+          message: "",
+        });
+        setIsVendorLoggedIn(false);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-  if (redirect) {
-    return <Navigate to="/login" />
-  }
-  
-  if (!isLogin) {
-    return <Navigate to="/login" />
+  if (redirect || !isLogin) {
+    return <Navigate to="/login" />;
   }
 
   return (
     <div>
       <div>
         <div
-          className={`fixed top-0 left-0 z-50 w-[27rem] md:w-[20rem] h-full py-5 px-5 bg-gray-800 text-white flex flex-col justify-between transition-transform duration-300 ease-in-out transform ${showSidebar ? 'translate-x-0' : '-translate-x-full'
-            } md:translate-x-0`}
+          className={`fixed top-0 left-0 z-50 w-[27rem] md:w-[20rem] h-full py-5 px-5 bg-gray-800 text-white flex flex-col justify-between transition-transform duration-300 ease-in-out transform ${
+            showSidebar ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0`}
         >
           <div className="relative flex justify-end p-4 md:hidden">
             <div
@@ -120,8 +129,8 @@ function VendorSidebar() {
 
           <div className="text-center mt-4">
             <h1 className="text-xl font-semibold">Vendor</h1>
-            <p className="text-gray-400">{vendorDetails.firstName}</p>
-            <p className="text-gray-400 text-sm">@{vendorDetails.id}</p>
+            <p className="text-gray-400">{vendorLoggedIn?.firstName}</p>
+            <p className="text-gray-400 text-sm">@{vendorLoggedIn?.id}</p>
           </div>
 
           <nav className="flex flex-col mt-6">
@@ -164,18 +173,16 @@ function VendorSidebar() {
               </Link>
             </div>
           )}
-
         </div>
 
         <div
-          className={`fixed top-0 left-0 z-40 w-full h-full bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out ${showSidebar ? 'opacity-50' : 'opacity-0 pointer-events-none'
-            } md:hidden`}
+          className={`fixed top-0 left-0 z-40 w-full h-full bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out ${
+            showSidebar ? "opacity-50" : "opacity-0 pointer-events-none"
+          } md:hidden`}
           onClick={() => setShowSidebar(false)}
         ></div>
 
-        <div
-          className='relative w-full md:hidden'
-        >
+        <div className="relative w-full md:hidden">
           <div
             className="absolute top-5 right-5 flex flex-col justify-center gap-1 cursor-pointer p-2 rounded-md bg-white transition duration-300 ease-in-out"
             onClick={() => setShowSidebar(!showSidebar)}
@@ -187,7 +194,7 @@ function VendorSidebar() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default VendorSidebar
+export default VendorSidebar;
