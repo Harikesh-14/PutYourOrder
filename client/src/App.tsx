@@ -33,6 +33,8 @@ function App() {
         <Route path='/login' element={<VendorLogin />} />
         <Route path='/' element={<Layout />} >
           <Route index element={<VendorHomePage />} />
+          <Route path='terms-and-conditions' element={<TermsAndConds />} />
+          <Route path='privacy-policies' element={<PrivacyPolicy />} />
         </Route>
 
         <Route path='*' element={<h1>Not Found</h1>} />
